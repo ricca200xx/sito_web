@@ -17,12 +17,6 @@ const MaskText = ({ children, delay = 0 }) => (
   </div>
 )
 
-const BADGES = [
-  { label: '01', category: 'EDUCATION', text: 'MSc Data Science — UniPD' },
-  { label: '02', category: 'EDUCATION', text: 'BSc Statistics — UniFI' },
-  { label: '03', category: 'LANGUAGE', text: 'English C1 / Italian Native' },
-]
-
 export default function About() {
   return (
     <section id="about" className="relative py-60 px-8 bg-transparent overflow-hidden">
@@ -64,26 +58,26 @@ export default function About() {
               className="space-y-12"
             >
               <p className="text-zinc-400 text-2xl font-light leading-relaxed">
-                Merging <span className="text-white">statistical rigour</span> with <span className="text-white italic">neural architectures</span> to build the next generation of predictive systems. 
+                Data Scientist student turning <span className="text-white">complexity into opportunity</span> through <span className="text-white italic">Generative AI</span> and advanced machine learning algorithms. 
               </p>
               
               <div className="space-y-6 text-zinc-500 text-sm leading-relaxed max-w-md">
                 <p>
-                  Specialized in processing complex data streams within high-intensity environments. My approach focuses on algorithmic precision and structural integrity.
+                  Currently working as a Data Science Intern in Gen AI at Leithà S.r.l. (Gruppo Unipol), building complex workflows, document ingestion pipelines, and agentic systems.
                 </p>
                 <p>
-                  Currently exploring the intersection of deep learning and real-world tactical applications.
+                  Completing a Master of Science in Data Science at the University of Padova (expected Q3 2026), bringing a strong learning mindset and curiosity to drive innovation.
                 </p>
               </div>
 
               <div className="flex gap-12 pt-8">
                 <div className="flex flex-col gap-2">
                   <span className="font-mono text-[9px] text-zinc-600 uppercase tracking-widest">Base</span>
-                  <span className="text-white font-mono text-xs uppercase tracking-tighter">Padua, IT</span>
+                  <span className="text-white font-mono text-xs uppercase tracking-tighter">Milan / Padua, IT</span>
                 </div>
                 <div className="flex flex-col gap-2">
-                  <span className="font-mono text-[9px] text-zinc-600 uppercase tracking-widest">Experience</span>
-                  <span className="text-white font-mono text-xs uppercase tracking-tighter">03+ Years</span>
+                  <span className="font-mono text-[9px] text-zinc-600 uppercase tracking-widest">Status</span>
+                  <span className="text-white font-mono text-xs uppercase tracking-tighter">Gen AI Intern</span>
                 </div>
               </div>
             </motion.div>
@@ -101,7 +95,12 @@ export default function About() {
               </div>
 
               <div className="space-y-8">
-                {BADGES.map((badge, i) => (
+                {[
+                  { label: '01', category: 'INTERNSHIP', text: 'Gen AI @ Leithà S.r.l.' },
+                  { label: '02', category: 'EDUCATION', text: 'MSc Data Science @ UniPD' },
+                  { label: '03', category: 'EXPERTISE', text: 'LLMs & Agentic Workflows' },
+                  { label: '04', category: 'LANGUAGE', text: 'English C1 / Italian Native' },
+                ].map((badge, i) => (
                   <motion.div
                     key={badge.text}
                     initial={{ opacity: 0, x: 20 }}

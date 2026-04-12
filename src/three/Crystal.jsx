@@ -28,13 +28,13 @@ export default function Crystal({ scale = 1, secondary = false }) {
       <directionalLight position={[-5, -5, -5]} intensity={0.3} color="#2997ff" />
 
       <mesh ref={meshRef} scale={scale}>
-        <icosahedronGeometry args={[1.5, 0]} />
+        <torusKnotGeometry args={[0.8, 0.25, 100, 16]} />
         <MeshTransmissionMaterial
           transmission={1}
-          roughness={0.05}
+          roughness={0.1}
           thickness={0.5}
-          ior={1.5}
-          chromaticAberration={0.05}
+          ior={1.4}
+          chromaticAberration={0.06}
           color={secondary ? '#1a1a2e' : '#ffffff'}
           backside={true}
           backsideThickness={0.3}

@@ -36,15 +36,18 @@ function DrivenCrystal({ progressRef }) {
     if (!mesh) return
     const p = progressRef.current
 
+    // Minimalist and elegant scaling - TorusKnot but much smaller
     mesh.scale.setScalar(mapKeys(p,
-      [0,    0.20, 0.55, 0.80, 1.0],
-      [0.05, 1.40, 1.90, 2.20, 1.60]
+      [0,    0.20, 0.50, 0.80, 1.0],
+      [0.05, 0.60, 0.85, 0.95, 0.75]
     ))
-    mesh.rotation.y = p * Math.PI * 3
-    mesh.rotation.x = Math.sin(p * Math.PI) * 0.45
-    mesh.rotation.z = Math.sin(p * Math.PI * 1.5) * 0.18
-    mesh.position.y = mapKeys(p, [0, 0.25, 0.60, 1.0], [-0.4, 0.6, 0.4, -0.1])
-    mesh.position.z = mapKeys(p, [0, 0.50, 0.80, 1.0], [0,   0.3, 0.5,  0.0])
+    
+    // Slow, professional rotation
+    mesh.rotation.y = p * Math.PI * 1.5
+    mesh.rotation.x = p * Math.PI * 1.2
+    
+    // Contained positioning
+    mesh.position.y = mapKeys(p, [0, 0.25, 0.60, 1.0], [-0.1, 0.2, 0.1, -0.05])
   })
 
   return (
@@ -52,22 +55,18 @@ function DrivenCrystal({ progressRef }) {
       <Environment preset="city" />
       <ambientLight intensity={0.25} />
       <directionalLight position={[5, 5, 5]}    intensity={1.2} color="#ffffff" />
-      <directionalLight position={[-5, -5, -5]} intensity={0.6} color="#2997ff" />
-      <directionalLight position={[0, -5, 3]}   intensity={0.3} color="#60a5fa" />
       <mesh ref={meshRef}>
-        <icosahedronGeometry args={[1.5, 1]} />
+        <torusKnotGeometry args={[0.8, 0.25, 128, 32]} />
         <MeshTransmissionMaterial
           transmission={1}
-          roughness={0.04}
-          thickness={0.6}
-          ior={1.6}
+          roughness={0.1}
+          thickness={0.5}
+          ior={1.4}
           chromaticAberration={0.06}
           color="#ffffff"
           backside
-          backsideThickness={0.4}
-          envMapIntensity={2.0}
-          temporalDistortion={0.1}
-          distortionScale={0.2}
+          backsideThickness={0.3}
+          envMapIntensity={1.5}
         />
       </mesh>
     </>
@@ -179,7 +178,7 @@ export default function ScrollHero() {
         >
           <div ref={nameInnerRef} className="flex flex-col items-center select-none">
             <span className="font-mono text-[10px] tracking-[0.6em] uppercase text-apple-blue mb-5">
-              Data Scientist &amp; AI Architect
+              Data Science Intern &amp; MSc Student
             </span>
             <h1
               className="font-display font-black text-center text-white"
@@ -201,9 +200,9 @@ export default function ScrollHero() {
             CSS transition gestisce il fade/slide.
             Posizionate al centro esatto del viewport.             */}
         {[
-          { ref: label1Ref, label: 'Neural Architectures',  sub: 'Expertise // 2026' },
-          { ref: label2Ref, label: 'Predictive Modeling',   sub: 'Research'           },
-          { ref: label3Ref, label: 'AI Systems',            sub: 'Architecture'       },
+          { ref: label1Ref, label: 'Generative AI',          sub: 'LLMs & Agents' },
+          { ref: label2Ref, label: 'Machine Learning',       sub: 'Deep Learning & Vision' },
+          { ref: label3Ref, label: 'Data Engineering',       sub: 'Pipelines & Cloud' },
         ].map(({ ref, label, sub }) => (
           <div
             key={label}

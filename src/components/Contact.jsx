@@ -48,8 +48,8 @@ export default function Contact() {
             <span className="font-mono text-[10px] text-zinc-600 uppercase tracking-widest group-hover:text-apple-blue transition-colors">
               // Email
             </span>
-            <span className="font-display font-bold text-2xl text-white group-hover:text-apple-blue transition-colors">
-              HELLO@EXAMPLE.COM
+            <span className="font-display font-bold text-2xl text-white group-hover:text-apple-blue transition-colors uppercase">
+              ricky.agosti@gmail.com
             </span>
           </a>
 

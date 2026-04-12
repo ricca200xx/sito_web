@@ -15,9 +15,10 @@ export default function App() {
     /* Lenis smooth scroll — durata leggermente ridotta per
        non "smorzare" troppo il video-scrubbing sticky */
     const lenis = new Lenis({
-      duration: 1.0,
-      lerp: 0.08,
+      duration: 1.2,
+      lerp: 0.05,
       smoothWheel: true,
+      wheelMultiplier: 1.0,
     })
 
     function raf(time) {

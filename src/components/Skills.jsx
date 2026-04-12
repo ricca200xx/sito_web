@@ -3,24 +3,24 @@ import { motion } from 'framer-motion'
 
 const SKILL_GROUPS = [
   {
-    label: '01_LANGUAGES',
-    category: 'Core Languages',
-    skills: ['Python', 'SQL', 'R', 'Stata', 'Git'],
+    label: '01_ML_&_AI',
+    category: 'Machine Learning & AI',
+    skills: ['Gen AI', 'LLM', 'Prompt Engineering', 'Agentic Workflows', 'Deep Learning', 'NLP', 'Computer Vision'],
   },
   {
     label: '02_FRAMEWORKS',
-    category: 'DL Frameworks',
-    skills: ['PyTorch', 'TensorFlow', 'Scikit-Learn', 'Keras', 'HuggingFace', 'YOLO'],
+    category: 'Frameworks & Tools',
+    skills: ['LangChain', 'LangGraph', 'PydanticAI', 'PyTorch', 'TensorFlow', 'Apache Spark', 'Scikit-Learn'],
   },
   {
-    label: '03_ARCHITECTURES',
-    category: 'Neural Nets',
-    skills: ['CNN', 'RNN', 'Transformers', 'ViT', 'MLP', 'Decision Trees'],
+    label: '03_CLOUD_VIS',
+    category: 'Cloud & Visualization',
+    skills: ['AWS / GCP / Azure', 'Tableau', 'Power BI', 'OCR', 'Matplotlib'],
   },
   {
-    label: '04_ANALYTICS',
-    category: 'Data Insights',
-    skills: ['Stats', 'Visualization', 'Pandas', 'Seaborn', 'Matplotlib'],
+    label: '04_PROGRAMMING',
+    category: 'Data & Programming',
+    skills: ['Python', 'SQL', 'R', 'Stata', 'Inferential Statistics'],
   },
 ]
 

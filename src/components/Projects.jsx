@@ -1,106 +1,338 @@
 // src/components/Projects.jsx
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useRef, useEffect, Suspense } from 'react'
+import { Canvas, useFrame } from '@react-three/fiber'
+import { Environment, MeshTransmissionMaterial } from '@react-three/drei'
+
+/* ═══════════════════════════════════════════════════════════
+   Projects — sticky scroll, visibilità binaria come ScrollHero
+
+   Timing su 500vh (totalH = 400vh):
+   ─ 0.00 → 0.12   Intro "SELECTED WORKS"
+   ─ 0.12 → 0.32   Project 01
+   ─ 0.32 → 0.52   Project 02
+   ─ 0.52 → 0.72   Project 03
+   ─ 0.72 → 0.92   Project 04
+   ─ 0.92 → 1.00   Exit overlay
+═══════════════════════════════════════════════════════════ */
+
+const lerp = (a, b, t) => a + (b - a) * t
+
+function mapKeys(p, inputs, outputs) {
+  for (let i = 0; i < inputs.length - 1; i++) {
+    if (p <= inputs[i + 1]) {
+      const t = (p - inputs[i]) / (inputs[i + 1] - inputs[i])
+      return lerp(outputs[i], outputs[i + 1], Math.max(0, Math.min(1, t)))
+    }
+  }
+  return outputs[outputs.length - 1]
+}
 
 const PROJECTS = [
   {
     id: 'p1',
     number: '01',
-    title: "Gotta Detect 'Em All",
-    subtitle: "Real-Time Pokemon Detection",
-    url: "https://github.com/ricca200xx/Pokemon-Detection-Model-Comparison",
+    category: 'Computer Vision',
+    title: 'Pokémon Detection',
+    subtitle: 'Model Comparison Study',
     tags: ['YOLOv11s', 'RT-DETR', 'Faster R-CNN', 'PyTorch'],
-    description: "A comparative study of object detection architectures for real-time Pokémon detection on a balanced 9-class dataset. Analyzes trade-offs between inference speed, localization quality, and classification precision.",
+    description:
+      'Comparative study of three state-of-the-art object detection architectures on a balanced 9-class dataset. Analyzed trade-offs between inference speed, localization quality, and classification precision to identify optimal real-time detection strategies.',
+    metric: '3 Models',
+    metricLabel: 'Benchmarked',
+    url: 'https://github.com/ricca200xx/Pokemon-Detection-Model-Comparison',
   },
   {
     id: 'p2',
     number: '02',
-    title: 'Solving Maximum Clique Problem',
-    subtitle: "via Continuous Optimization",
-    url: "https://github.com/ricca200xx/Find-a-maximal-clique-with-optimization-algorithm",
-    tags: ['Python', 'Projected Gradient Descent', 'Frank-Wolfe'],
-    description: "Addresses the Maximum Clique Problem (MCP) by reformulating it as a continuous optimization problem using the Motzkin-Straus formulation. Implements and compares first-order optimization algorithms.",
+    category: 'Deep Learning',
+    title: 'Custom CNN',
+    subtitle: 'Image Classification Pipeline',
+    tags: ['PyTorch', 'CNN', 'Image Recognition'],
+    description:
+      'End-to-end image classification pipeline implementing a convolutional neural network from scratch using PyTorch. Successfully classified images into 20 distinct categories, demonstrating complete deep learning workflows from preprocessing to architecture design.',
+    metric: '87%',
+    metricLabel: 'Accuracy — 20 Classes',
+    url: 'https://github.com/ricca200xx/Scratch-CNN-Image-Recognition',
   },
   {
     id: 'p3',
     number: '03',
-    title: 'Custom CNN Image Recognition',
-    subtitle: "From Scratch Classification",
-    url: "https://github.com/ricca200xx/Scratch-CNN-Image-Recognition",
-    tags: ['PyTorch', 'CNN', 'Deep Learning'],
-    description: "An end-to-end image classification project implementing a Convolutional Neural Network (CNN) from scratch to classify 20 categories. Demonstrates complete deep learning workflows including preprocessing and architecture design.",
+    category: 'Time Series',
+    title: 'Weather Forecasting',
+    subtitle: 'Seq2Seq GRU Architecture',
+    tags: ['PyTorch', 'Seq2Seq', 'GRU', 'Scikit-learn'],
+    description:
+      'Multivariate time-series forecasting model predicting 76 weather variables 30 steps into the future from 90 historical steps. Employs a Sequence-to-Sequence architecture with Gated Recurrent Units for robust temporal pattern learning.',
+    metric: '76',
+    metricLabel: 'Variables Predicted',
+    url: 'https://github.com/ricca200xx/Weather-Time-Series-Forecasting-with-Seq2Seq-GRU',
   },
   {
     id: 'p4',
     number: '04',
-    title: 'Weather Time-Series Forecasting',
-    subtitle: "with Seq2Seq GRU",
-    url: "https://github.com/ricca200xx/Weather-Time-Series-Forecasting-with-Seq2Seq-GRU",
-    tags: ['PyTorch', 'Seq2Seq', 'GRU', 'Scikit-learn'],
-    description: "A multivariate time-series forecasting project predicting 76 weather variables for 30 future steps using 90 historical steps. Employs a Sequence-to-Sequence (Seq2Seq) architecture based on Gated Recurrent Units.",
+    category: 'Combinatorial Optimization',
+    title: 'Maximum Clique',
+    subtitle: 'Continuous Optimization Approach',
+    tags: ['Python', 'Gradient Descent', 'Frank-Wolfe'],
+    description:
+      'Solved the NP-hard Maximum Clique Problem by reformulating it as continuous optimization via the Motzkin-Straus formulation. Benchmarked Projected Gradient Descent and Frank-Wolfe algorithms on DIMACS datasets.',
+    metric: '−30%',
+    metricLabel: 'Execution Time on DIMACS',
+    url: 'https://github.com/ricca200xx/Find-a-maximal-clique-with-optimization-algorithm',
   },
 ]
 
-export default function Projects() {
-  const [hoveredId, setHoveredId] = useState(null)
+/* ── 3D shape pilotata dallo scroll ─────────────────────── */
+function ProjectShape({ progressRef }) {
+  const meshRef = useRef()
+
+  useFrame(() => {
+    const mesh = meshRef.current
+    if (!mesh) return
+    const p = progressRef.current
+    mesh.rotation.y  = p * Math.PI * 4
+    mesh.rotation.x  = Math.sin(p * Math.PI * 2.5) * 0.6
+    mesh.position.x  = Math.sin(p * Math.PI * 2)   * 1.8
+    mesh.position.y  = Math.cos(p * Math.PI * 1.5) * 0.6
+    mesh.scale.setScalar(mapKeys(p,
+      [0, 0.08, 0.92, 1.0],
+      [0.1, 0.8, 0.8, 0.1]
+    ))
+  })
 
   return (
-    <section id="projects" className="relative py-40 px-8 bg-transparent">
-      {/* Gradient masks per transizioni smooth */}
-      <div className="absolute top-0 left-0 right-0 pointer-events-none z-0"
-        style={{ height: '160px', background: 'linear-gradient(to bottom, #080808 0%, transparent 100%)' }} />
-      <div className="absolute bottom-0 left-0 right-0 pointer-events-none z-0"
-        style={{ height: '160px', background: 'linear-gradient(to top, #080808 0%, transparent 100%)' }} />
+    <>
+      <Environment preset="city" />
+      <ambientLight intensity={0.2} />
+      <directionalLight position={[5, 5, 5]}  intensity={1.0} color="#ffffff" />
+      <directionalLight position={[-5, -3, 2]} intensity={0.4} color="#2997ff" />
+      <mesh ref={meshRef}>
+        <icosahedronGeometry args={[1.2, 1]} />
+        <MeshTransmissionMaterial
+          transmission={1}
+          roughness={0.05}
+          thickness={0.8}
+          ior={1.5}
+          chromaticAberration={0.07}
+          color="#ffffff"
+          backside
+          backsideThickness={0.4}
+          envMapIntensity={1.8}
+        />
+      </mesh>
+    </>
+  )
+}
 
-      <div className="max-w-7xl mx-auto relative z-10">
-        <motion.div
-          initial={{ opacity: 0, x: -48 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-32 flex flex-col items-start"
+/* ── Componente principale ──────────────────────────────── */
+export default function Projects() {
+  const sectionRef     = useRef(null)
+  const progressRef    = useRef(0)
+  const headerRef      = useRef(null)
+  const exitRef        = useRef(null)
+  const progressBarRef = useRef(null)
+  const counterRef     = useRef(null)   // "01 / 04" persistente
+  const sectionLabelRef = useRef(null)  // "PROJECTS" persistente
+  const projectRefs    = useRef(PROJECTS.map(() => null))
+  const dotRefs        = useRef(PROJECTS.map(() => null))
+
+  useEffect(() => {
+    const N          = PROJECTS.length
+    const INTRO_END  = 0.12
+    const EXIT_START = 0.92
+    const PROJ_RANGE = EXIT_START - INTRO_END   // 0.80
+    const PROJ_SIZE  = PROJ_RANGE / N           // 0.20 ciascuno
+
+    const update = () => {
+      const el = sectionRef.current
+      if (!el) return
+      const rect   = el.getBoundingClientRect()
+      const totalH = el.offsetHeight - window.innerHeight
+      const p      = Math.min(Math.max(-rect.top / totalH, 0), 1)
+      progressRef.current = p
+
+      // Barra progresso
+      if (progressBarRef.current) {
+        progressBarRef.current.style.transform = `scaleX(${p})`
+      }
+
+      // Intro header — same pattern as ScrollHero labels (binary + CSS transition)
+      if (headerRef.current) {
+        const vis = p < INTRO_END
+        headerRef.current.style.opacity   = vis ? '1' : '0'
+        headerRef.current.style.transform = vis
+          ? 'translateY(0px)'
+          : p < 0.04 ? 'translateY(30px)' : 'translateY(-30px)'
+      }
+
+      // Label persistente "PROJECTS" — visibile solo durante i progetti
+      if (sectionLabelRef.current) {
+        const vis = p >= INTRO_END && p < EXIT_START
+        sectionLabelRef.current.style.opacity = vis ? '1' : '0'
+      }
+
+      // Progetto attivo corrente
+      let activeIndex = -1
+
+      PROJECTS.forEach((_, i) => {
+        const ref    = projectRefs.current[i]
+        const dotRef = dotRefs.current[i]
+        if (!ref) return
+
+        const start = INTRO_END + i * PROJ_SIZE
+        const end   = start + PROJ_SIZE
+
+        // Visibilità BINARIA — come le labels in ScrollHero
+        const active = p >= start && p < end
+        if (active) activeIndex = i
+
+        ref.style.opacity       = active ? '1' : '0'
+        ref.style.transform     = active
+          ? 'translateY(0px)'
+          : p < start ? 'translateY(40px)' : 'translateY(-40px)'
+        ref.style.pointerEvents = active ? 'auto' : 'none'
+
+        if (dotRef) {
+          dotRef.style.background = active ? '#2997ff' : 'rgba(255,255,255,0.15)'
+          dotRef.style.transform  = active ? 'scale(2)' : 'scale(1)'
+        }
+      })
+
+      // Aggiorna counter "01 / 04"
+      if (counterRef.current && activeIndex >= 0) {
+        counterRef.current.textContent =
+          `${String(activeIndex + 1).padStart(2, '0')} / ${String(N).padStart(2, '0')}`
+      }
+
+      // Exit overlay
+      if (exitRef.current) {
+        exitRef.current.style.opacity = String(
+          Math.max(0, (p - EXIT_START) / (1 - EXIT_START))
+        )
+      }
+    }
+
+    window.addEventListener('scroll', update, { passive: true })
+    update()
+    return () => window.removeEventListener('scroll', update)
+  }, [])
+
+  const TRANSITION = 'opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1)'
+
+  return (
+    <section
+      ref={sectionRef}
+      id="projects"
+      style={{ height: '500vh', position: 'relative' }}
+    >
+      <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }}>
+
+        {/* Gradient mask top / bottom */}
+        <div className="absolute top-0 left-0 right-0 pointer-events-none z-0"
+          style={{ height: '100px', background: 'linear-gradient(to bottom, #080808 0%, transparent 100%)' }} />
+        <div className="absolute bottom-0 left-0 right-0 pointer-events-none z-0"
+          style={{ height: '100px', background: 'linear-gradient(to top, #080808 0%, transparent 100%)' }} />
+
+        {/* Griglia decorativa */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden z-0" style={{ opacity: 0.04 }}>
+          <div className="absolute left-1/4  top-0 bottom-0 w-px bg-white" />
+          <div className="absolute left-2/4  top-0 bottom-0 w-px bg-white" />
+          <div className="absolute left-3/4  top-0 bottom-0 w-px bg-white" />
+          <div className="absolute top-1/3  left-0 right-0 h-px bg-white" />
+          <div className="absolute top-2/3  left-0 right-0 h-px bg-white" />
+        </div>
+
+        {/* 3D Background */}
+        <div className="absolute inset-0 z-0" style={{ opacity: 0.20 }}>
+          <Canvas
+            camera={{ position: [0, 0, 5], fov: 45 }}
+            gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
+            style={{ background: 'transparent' }}
+            dpr={[1, 2]}
+          >
+            <Suspense fallback={null}>
+              <ProjectShape progressRef={progressRef} />
+            </Suspense>
+          </Canvas>
+        </div>
+
+        {/* ═══ LABEL PERSISTENTE "PROJECTS" — top-left ═══ */}
+        <div
+          ref={sectionLabelRef}
+          className="absolute top-8 left-10 lg:left-16 z-20 select-none"
+          style={{ opacity: 0, transition: 'opacity 0.4s ease' }}
         >
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-2 h-2 bg-apple-blue" />
-            <span className="font-mono text-apple-blue text-[10px] tracking-[0.5em] uppercase">
+          <div className="flex items-center gap-3 mb-1">
+            <div className="w-1.5 h-1.5 bg-apple-blue rounded-full" />
+            <span className="font-mono text-[9px] tracking-[0.5em] uppercase text-apple-blue">
               Selected.Works
             </span>
           </div>
-          <h2 className="font-display font-black text-5xl lg:text-7xl text-white tracking-tight leading-none">
-            ENGINEERING <br/><span className="text-zinc-600">PORTFOLIO</span>
-          </h2>
-        </motion.div>
+          <span
+            ref={counterRef}
+            className="font-mono text-[11px] text-zinc-600 tracking-widest"
+          >
+            01 / 04
+          </span>
+        </div>
 
-        <div className="flex flex-col border-t border-white/10">
-          {PROJECTS.map((project, i) => (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 52 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ delay: i * 0.1, duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-              onMouseEnter={() => setHoveredId(project.id)}
-              onMouseLeave={() => setHoveredId(null)}
-              className="group relative flex flex-col lg:flex-row items-start lg:items-center py-16 border-b border-white/10 transition-colors hover:bg-white/[0.02]"
-            >
-              
-              {/* Left: Number & Title */}
-              <div className="lg:w-1/2 flex gap-8 items-start mb-8 lg:mb-0 px-8">
-                <span className="font-mono text-zinc-700 text-xl font-bold mt-2 transition-colors group-hover:text-apple-blue">
+        {/* ══ INTRO HEADER ══ */}
+        <div
+          ref={headerRef}
+          className="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none select-none"
+          style={{ opacity: 0, transform: 'translateY(30px)', transition: TRANSITION }}
+        >
+          <span className="font-mono text-[10px] tracking-[0.6em] uppercase text-apple-blue mb-6">
+            Engineering Portfolio
+          </span>
+          <h2
+            className="font-display font-black text-center text-white"
+            style={{
+              fontSize: 'clamp(3rem, 10vw, 9rem)',
+              lineHeight: 0.88,
+              letterSpacing: '-0.05em',
+            }}
+          >
+            <span className="block">SELECTED</span>
+            <span className="block" style={{ color: '#3f3f46' }}>WORKS</span>
+          </h2>
+        </div>
+
+        {/* ══ PROJECT PANELS ══ */}
+        {PROJECTS.map((project, i) => (
+          <div
+            key={project.id}
+            ref={el => { projectRefs.current[i] = el }}
+            className="absolute inset-0 flex flex-col justify-center z-10 px-10 lg:px-24"
+            style={{
+              opacity: 0,
+              transform: 'translateY(40px)',
+              transition: TRANSITION,
+              pointerEvents: 'none',
+            }}
+          >
+            <div className="max-w-6xl w-full mx-auto">
+
+              {/* Riga 1: numero ghost + categoria + tag */}
+              <div className="flex items-start gap-6 mb-8">
+                <span
+                  className="font-mono font-bold text-white select-none shrink-0"
+                  style={{
+                    fontSize: 'clamp(2rem, 4.5vw, 4rem)',
+                    opacity: 0.06,
+                    lineHeight: 1,
+                    marginTop: '4px',
+                  }}
+                >
                   {project.number}
                 </span>
                 <div>
-                  <a href={project.url} target="_blank" rel="noopener noreferrer" className="block cursor-pointer">
-                    <h3 className="font-display font-black text-3xl lg:text-5xl text-white tracking-tight mb-2 group-hover:text-apple-blue transition-colors duration-300">
-                      {project.title}
-                    </h3>
-                  </a>
-                  <span className="font-mono text-xs text-zinc-500 uppercase tracking-widest block mb-6">
-                    {project.subtitle}
+                  <span className="font-mono text-[10px] tracking-[0.55em] uppercase text-apple-blue block mb-3">
+                    {project.category}
                   </span>
-                  <div className="flex flex-wrap gap-x-6 gap-y-2">
-                    {project.tags.map((tag) => (
-                      <span key={tag} className="font-mono text-[10px] text-zinc-400 uppercase tracking-widest">
+                  <div className="flex flex-wrap gap-4">
+                    {project.tags.map(tag => (
+                      <span key={tag} className="font-mono text-[9px] text-zinc-600 uppercase tracking-widest">
                         // {tag}
                       </span>
                     ))}
@@ -108,25 +340,114 @@ export default function Projects() {
                 </div>
               </div>
 
-              {/* Right: Description & Link */}
-              <div className="lg:w-1/2 px-8 flex flex-col items-start lg:pl-16 lg:border-l border-white/10">
-                <p className="text-zinc-400 text-lg leading-relaxed mb-8 max-w-xl">
+              {/* Titolo */}
+              <h3
+                className="font-display font-black text-white"
+                style={{
+                  fontSize: 'clamp(3rem, 9vw, 8rem)',
+                  lineHeight: 0.88,
+                  letterSpacing: '-0.04em',
+                  marginBottom: '0.18em',
+                }}
+              >
+                {project.title}
+              </h3>
+
+              {/* Sottotitolo */}
+              <p
+                className="font-display font-light text-zinc-600"
+                style={{
+                  fontSize: 'clamp(1.1rem, 3vw, 2.6rem)',
+                  letterSpacing: '-0.03em',
+                  lineHeight: 1,
+                  marginBottom: '2.2rem',
+                }}
+              >
+                {project.subtitle}
+              </p>
+
+              {/* Divisore + descrizione / metrica / link */}
+              <div
+                className="flex flex-col lg:flex-row gap-10 items-start pt-8"
+                style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}
+              >
+                <p
+                  className="text-zinc-500 leading-relaxed max-w-2xl"
+                  style={{ fontSize: 'clamp(0.82rem, 1.3vw, 0.97rem)' }}
+                >
                   {project.description}
                 </p>
-                <a 
-                  href={project.url}
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-4 group/btn"
-                >
-                  <span className="font-mono text-xs text-white uppercase tracking-widest">View Source</span>
-                  <div className="w-8 h-px bg-white group-hover/btn:w-16 group-hover/btn:bg-apple-blue transition-all duration-300" />
-                </a>
+
+                <div className="flex flex-col gap-5 lg:ml-auto shrink-0 items-start lg:items-end">
+                  {/* Metrica */}
+                  <div className="lg:text-right">
+                    <div
+                      className="font-display font-black text-white"
+                      style={{
+                        fontSize: 'clamp(2rem, 4.5vw, 3.8rem)',
+                        lineHeight: 1,
+                        letterSpacing: '-0.03em',
+                      }}
+                    >
+                      {project.metric}
+                    </div>
+                    <div className="font-mono text-[9px] text-zinc-600 uppercase tracking-widest mt-2">
+                      {project.metricLabel}
+                    </div>
+                  </div>
+
+                  {/* Link GitHub */}
+                  <a
+                    href={project.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-4 group/btn mt-2"
+                  >
+                    <span className="font-mono text-[10px] text-white uppercase tracking-widest">
+                      View Source
+                    </span>
+                    <div className="w-8 h-px bg-white group-hover/btn:w-16 group-hover/btn:bg-apple-blue transition-all duration-300" />
+                  </a>
+                </div>
               </div>
-              
-            </motion.div>
+            </div>
+          </div>
+        ))}
+
+        {/* ── Dot indicator — destra ── */}
+        <div className="absolute right-6 top-1/2 -translate-y-1/2 z-20 flex flex-col gap-4 select-none">
+          {PROJECTS.map((_, i) => (
+            <div
+              key={i}
+              ref={el => { dotRefs.current[i] = el }}
+              className="w-1.5 h-1.5 rounded-full transition-all duration-300"
+              style={{ background: 'rgba(255,255,255,0.15)' }}
+            />
           ))}
         </div>
+
+        {/* ── Progress bar — bottom ── */}
+        <div
+          className="absolute bottom-0 left-0 right-0 z-20 pointer-events-none"
+          style={{ height: 1, background: 'rgba(41,151,255,0.08)' }}
+        >
+          <div
+            ref={progressBarRef}
+            style={{
+              height: '100%',
+              transformOrigin: 'left',
+              transform: 'scaleX(0)',
+              background: 'linear-gradient(90deg, rgba(41,151,255,0.85), rgba(100,180,255,0.4))',
+            }}
+          />
+        </div>
+
+        {/* ══ EXIT OVERLAY ══ */}
+        <div
+          ref={exitRef}
+          className="absolute inset-0 z-30 pointer-events-none"
+          style={{ background: '#080808', opacity: 0 }}
+        />
       </div>
     </section>
   )
