@@ -49,7 +49,7 @@ export default function Navbar() {
         RA
       </span>
 
-      <ul className="flex items-center gap-8">
+      <ul className="hidden md:flex items-center gap-8">
         {NAV_ITEMS.map((item) => {
           const isActive = activeSection === item.href
           return (
