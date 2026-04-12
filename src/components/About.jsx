@@ -4,140 +4,123 @@ import { Canvas } from '@react-three/fiber'
 import { motion } from 'framer-motion'
 import Crystal from '../three/Crystal'
 
+const MaskText = ({ children, delay = 0 }) => (
+  <div className="overflow-hidden">
+    <motion.div
+      initial={{ y: "100%" }}
+      whileInView={{ y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 1.2, delay, ease: [0.16, 1, 0.3, 1] }}
+    >
+      {children}
+    </motion.div>
+  </div>
+)
+
 const BADGES = [
-  { icon: '🎓', text: 'MSc Data Science — Università di Padova' },
-  { icon: '🎓', text: 'BSc Statistics — Università di Firenze · 94/110' },
-  { icon: '🌍', text: 'English C1 · Italian Native' },
+  { label: '01', category: 'EDUCATION', text: 'MSc Data Science — UniPD' },
+  { label: '02', category: 'EDUCATION', text: 'BSc Statistics — UniFI' },
+  { label: '03', category: 'LANGUAGE', text: 'English C1 / Italian Native' },
 ]
-
-const fadeLeft = {
-  hidden: { opacity: 0, x: -40 },
-  visible: { opacity: 1, x: 0 },
-}
-
-const fadeRight = {
-  hidden: { opacity: 0, x: 40 },
-  visible: { opacity: 1, x: 0 },
-}
 
 export default function About() {
   return (
-    <section
-      id="about"
-      className="relative"
-      style={{
-        background: 'var(--bg-primary)',
-        padding: '120px 0',
-      }}
-    >
-      <div
-        className="mx-auto"
-        style={{ maxWidth: '1100px', padding: '0 2rem' }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            gap: '4rem',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-          }}
-        >
-          {/* Colonna sinistra: testo */}
-          <motion.div
-            variants={fadeLeft}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
-            style={{ flex: '1 1 55%', minWidth: '280px' }}
-          >
-            <p
-              className="text-xs font-semibold tracking-widest uppercase mb-4"
-              style={{ color: 'var(--text-secondary)' }}
-            >
-              — Chi sono
-            </p>
-            <h2
-              className="font-display font-bold mb-6"
-              style={{
-                fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)',
-                color: 'var(--text-primary)',
-                lineHeight: 1.2,
-                letterSpacing: '-0.02em',
-              }}
-            >
-              Trasformo dati complessi<br />in insight azionabili
-            </h2>
-            <p
-              style={{
-                color: 'var(--text-secondary)',
-                fontSize: '1.05rem',
-                lineHeight: 1.75,
-                maxWidth: '520px',
-              }}
-            >
-              Sono uno studente magistrale in Data Science all&apos;Università di Padova,
-              appassionato di AI e Machine Learning. Ho un solido background statistico
-              e un&apos;esperienza pratica in Deep Learning — Computer Vision, NLP, Time Series
-              e Multimodal Learning. Mi entusiasmano le sfide in ambienti ad alta
-              tecnologia come Cybersecurity e Defense, dove i dati possono fare la
-              differenza nelle decisioni critiche.
-            </p>
-          </motion.div>
+    <section id="about" className="relative py-60 px-8 bg-transparent overflow-hidden">
+      {/* Structural Grid */}
+      <div className="absolute left-1/4 top-0 bottom-0 w-px bg-white/5 pointer-events-none" />
+      <div className="absolute right-1/4 top-0 bottom-0 w-px bg-white/5 pointer-events-none" />
 
-          {/* Colonna destra: cristallo + badge */}
-          <motion.div
-            variants={fadeRight}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
-            style={{
-              flex: '1 1 35%',
-              minWidth: '260px',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '1.5rem',
-            }}
-          >
-            {/* Mini cristallo */}
-            <div style={{ width: '180px', height: '180px' }}>
-              <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
-                <Suspense fallback={null}>
-                  <Crystal scale={0.7} secondary={true} />
-                </Suspense>
-              </Canvas>
-            </div>
+      {/* Gradient fade-in dal nero dell'hero — transizione imperceptibile */}
+      <div className="absolute top-0 left-0 right-0 pointer-events-none z-0"
+        style={{ height: '220px', background: 'linear-gradient(to bottom, #080808 0%, transparent 100%)' }} />
+      {/* Gradient fade-out in fondo per entrare nella Skills section */}
+      <div className="absolute bottom-0 left-0 right-0 pointer-events-none z-0"
+        style={{ height: '160px', background: 'linear-gradient(to top, #080808 0%, transparent 100%)' }} />
 
-            {/* Badge */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '100%' }}>
-              {BADGES.map((badge, i) => (
-                <motion.div
-                  key={badge.text}
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.15 + 0.4, duration: 0.5 }}
-                  style={{
-                    background: 'var(--glass-bg)',
-                    border: '1px solid var(--glass-border)',
-                    borderRadius: '12px',
-                    padding: '12px 16px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.75rem',
-                    fontSize: '0.85rem',
-                    color: 'var(--text-secondary)',
-                    backdropFilter: 'blur(10px)',
-                  }}
-                >
-                  <span style={{ fontSize: '1rem' }}>{badge.icon}</span>
-                  {badge.text}
-                </motion.div>
-              ))}
+      <div className="max-w-[90vw] lg:max-w-7xl mx-auto relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          
+          {/* Section Header */}
+          <div className="lg:col-span-4">
+            <div className="flex flex-col items-start gap-8">
+              <span className="font-mono text-apple-blue text-[10px] tracking-[0.5em] uppercase">
+                / PROFILE.BIO
+              </span>
+              <h2 className="font-display font-black text-6xl lg:text-8xl text-white tracking-tight leading-[0.85]">
+                <MaskText>ABOUT</MaskText>
+                <MaskText delay={0.1}>THE</MaskText>
+                <MaskText delay={0.2}><span className="text-zinc-700">AGENT</span></MaskText>
+              </h2>
             </div>
-          </motion.div>
+          </div>
+
+          {/* Main Content */}
+          <div className="lg:col-span-5 lg:pl-12 border-l border-white/10">
+            <motion.div
+              initial={{ opacity: 0, y: 48 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 1.3, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              className="space-y-12"
+            >
+              <p className="text-zinc-400 text-2xl font-light leading-relaxed">
+                Merging <span className="text-white">statistical rigour</span> with <span className="text-white italic">neural architectures</span> to build the next generation of predictive systems. 
+              </p>
+              
+              <div className="space-y-6 text-zinc-500 text-sm leading-relaxed max-w-md">
+                <p>
+                  Specialized in processing complex data streams within high-intensity environments. My approach focuses on algorithmic precision and structural integrity.
+                </p>
+                <p>
+                  Currently exploring the intersection of deep learning and real-world tactical applications.
+                </p>
+              </div>
+
+              <div className="flex gap-12 pt-8">
+                <div className="flex flex-col gap-2">
+                  <span className="font-mono text-[9px] text-zinc-600 uppercase tracking-widest">Base</span>
+                  <span className="text-white font-mono text-xs uppercase tracking-tighter">Padua, IT</span>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <span className="font-mono text-[9px] text-zinc-600 uppercase tracking-widest">Experience</span>
+                  <span className="text-white font-mono text-xs uppercase tracking-tighter">03+ Years</span>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Metadata / Details */}
+          <div className="lg:col-span-3">
+            <div className="space-y-12">
+              <div className="h-40 pointer-events-none grayscale opacity-50">
+                <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
+                  <Suspense fallback={null}>
+                    <Crystal scale={1.2} secondary={true} />
+                  </Suspense>
+                </Canvas>
+              </div>
+
+              <div className="space-y-8">
+                {BADGES.map((badge, i) => (
+                  <motion.div
+                    key={badge.text}
+                    initial={{ opacity: 0, x: 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1 + 0.6 }}
+                    className="flex flex-col gap-2"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-apple-blue text-[9px]">{badge.label}</span>
+                      <span className="font-mono text-zinc-600 text-[9px] uppercase tracking-widest">{badge.category}</span>
+                    </div>
+                    <span className="text-xs font-medium text-zinc-300 tracking-tight">{badge.text}</span>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>

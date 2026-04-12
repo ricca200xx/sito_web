@@ -12,7 +12,8 @@ export default {
         'apple-blue': '#2997ff',
       },
       fontFamily: {
-        display: ['-apple-system', 'BlinkMacSystemFont', 'Inter', 'sans-serif'],
+        display: ['"Plus Jakarta Sans"', 'Inter', '-apple-system', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
     },
   },
