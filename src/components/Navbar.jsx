@@ -3,8 +3,8 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const NAV_ITEMS = [
-  { label: 'ABOUT', href: '#about' },
-  { label: 'SKILLS', href: '#skills' },
+  { label: 'PROFILE', href: '#about' },
+  { label: 'STACK', href: '#skills' },
   { label: 'PROJECTS', href: '#projects' },
   { label: 'CONTACT', href: '#contact' },
 ]
@@ -54,7 +54,7 @@ export default function Navbar() {
           </div>
           <div className="h-4 w-px bg-white/20" />
           <span className="font-mono text-[9px] tracking-[0.4em] text-zinc-500 uppercase">
-            Systems / 2026
+            AI / 2026
           </span>
         </a>
       </motion.div>

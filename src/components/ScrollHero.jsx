@@ -178,7 +178,7 @@ export default function ScrollHero() {
         >
           <div ref={nameInnerRef} className="flex flex-col items-center select-none">
             <span className="font-mono text-[10px] tracking-[0.6em] uppercase text-apple-blue mb-5">
-              Data Science Intern &amp; MSc Student
+              Data Scientist · Gen AI & LLMs · MSc Student
             </span>
             <h1
               className="font-display font-black text-center text-white"
@@ -202,7 +202,7 @@ export default function ScrollHero() {
         {[
           { ref: label1Ref, label: 'Generative AI',          sub: 'LLMs & Agents' },
           { ref: label2Ref, label: 'Machine Learning',       sub: 'Deep Learning & Vision' },
-          { ref: label3Ref, label: 'Data Engineering',       sub: 'Pipelines & Cloud' },
+          { ref: label3Ref, label: 'Statistical Modeling',    sub: 'Deep Learning & Time Series' },
         ].map(({ ref, label, sub }) => (
           <div
             key={label}

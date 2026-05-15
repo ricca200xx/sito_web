@@ -38,12 +38,11 @@ export default function About() {
           <div className="lg:col-span-4">
             <div className="flex flex-col items-start gap-8">
               <span className="font-mono text-apple-blue text-[10px] tracking-[0.5em] uppercase">
-                / PROFILE.BIO
+                / DATA.SCIENTIST
               </span>
               <h2 className="font-display font-black text-6xl lg:text-8xl text-white tracking-tight leading-[0.85]">
                 <MaskText>ABOUT</MaskText>
-                <MaskText delay={0.1}>THE</MaskText>
-                <MaskText delay={0.2}><span className="text-zinc-700">AGENT</span></MaskText>
+                <MaskText delay={0.1}><span className="text-zinc-700">ME</span></MaskText>
               </h2>
             </div>
           </div>
@@ -58,15 +57,15 @@ export default function About() {
               className="space-y-12"
             >
               <p className="text-zinc-400 text-2xl font-light leading-relaxed">
-                Data Scientist student turning <span className="text-white">complexity into opportunity</span> through <span className="text-white italic">Generative AI</span> and advanced machine learning algorithms. 
+                Data Scientist with a focus on <span className="text-white">Generative AI</span> — building <span className="text-white italic">LLM pipelines</span>, agentic workflows and deep learning models to solve complex, real-world problems.
               </p>
-              
+
               <div className="space-y-6 text-zinc-500 text-sm leading-relaxed max-w-md">
                 <p>
-                  Currently working as a Data Science Intern in Gen AI at Leithà S.r.l. (Gruppo Unipol), building complex workflows, document ingestion pipelines, and agentic systems.
+                  Curricular intern at <span className="text-zinc-300">Leithà S.r.l. (Gruppo Unipol)</span> since Feb 2026 — designing POCs for intelligent document processing: <span className="text-zinc-300">OCR → LLM → structured extraction</span>. Building agentic, multi-prompt and tool-use pipelines with LangChain, LangGraph and PydanticAI. Cloud stack: GCP · AWS · Azure.
                 </p>
                 <p>
-                  Completing a Master of Science in Data Science at the University of Padova (expected Q3 2026), bringing a strong learning mindset and curiosity to drive innovation.
+                  MSc Data Science <span className="text-zinc-300">@ UniPD</span>, graduating Q3 2026. BSc Statistics <span className="text-zinc-300">@ UniFi</span>. Solid quantitative foundations applied to modern architectures: CNN, RNN, Seq2Seq, Visual Transformers.
                 </p>
               </div>
 
@@ -77,7 +76,7 @@ export default function About() {
                 </div>
                 <div className="flex flex-col gap-2">
                   <span className="font-mono text-[9px] text-zinc-600 uppercase tracking-widest">Status</span>
-                  <span className="text-white font-mono text-xs uppercase tracking-tighter">Gen AI Intern</span>
+                  <span className="text-white font-mono text-xs uppercase tracking-tighter">Junior Data Scientist</span>
                 </div>
               </div>
             </motion.div>
@@ -96,7 +95,7 @@ export default function About() {
 
               <div className="space-y-8">
                 {[
-                  { label: '01', category: 'INTERNSHIP', text: 'Gen AI @ Leithà S.r.l.' },
+                  { label: '01', category: 'INTERNSHIP', text: 'Data Science @ Leithà S.r.l.' },
                   { label: '02', category: 'EDUCATION', text: 'MSc Data Science @ UniPD' },
                   { label: '03', category: 'EXPERTISE', text: 'LLMs & Agentic Workflows' },
                   { label: '04', category: 'LANGUAGE', text: 'English C1 / Italian Native' },

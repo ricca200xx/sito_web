@@ -22,7 +22,7 @@ export default function Contact() {
           <div className="flex items-center justify-center gap-4 mb-8">
             <div className="w-2 h-2 bg-apple-blue" />
             <span className="font-mono text-apple-blue text-[10px] tracking-[0.5em] uppercase">
-              System.Ping
+              / GET.IN.TOUCH
             </span>
             <div className="w-2 h-2 bg-apple-blue" />
           </div>

@@ -5,17 +5,17 @@ const SKILL_GROUPS = [
   {
     label: '01_ML_&_AI',
     category: 'Machine Learning & AI',
-    skills: ['Gen AI', 'LLM', 'Prompt Engineering', 'Agentic Workflows', 'Deep Learning', 'NLP', 'Computer Vision'],
+    skills: ['Gen AI', 'LLM', 'Prompt Engineering', 'Agentic Workflows', 'Deep Learning', 'NLP', 'Computer Vision', 'Reinforcement Learning'],
   },
   {
     label: '02_FRAMEWORKS',
     category: 'Frameworks & Tools',
-    skills: ['LangChain', 'LangGraph', 'PydanticAI', 'PyTorch', 'TensorFlow', 'Apache Spark', 'Scikit-Learn'],
+    skills: ['LangChain', 'LangGraph', 'PydanticAI', 'PyTorch', 'TensorFlow', 'Keras', 'Scikit-Learn', 'XGBoost', 'Apache Spark'],
   },
   {
     label: '03_CLOUD_VIS',
     category: 'Cloud & Visualization',
-    skills: ['AWS / GCP / Azure', 'Tableau', 'Power BI', 'OCR', 'Matplotlib'],
+    skills: ['Google Cloud', 'AWS', 'Azure', 'OCR', 'Tableau', 'Power BI', 'Matplotlib', 'Seaborn', 'Git'],
   },
   {
     label: '04_PROGRAMMING',
@@ -53,7 +53,7 @@ export default function Skills() {
             <div className="flex items-center gap-4 mb-4">
               <div className="w-2 h-2 bg-apple-blue" />
               <span className="font-mono text-apple-blue text-[10px] tracking-[0.5em] uppercase">
-                Technical.Inventory
+                / CORE.STACK
               </span>
             </div>
             <h2 className="font-display font-black text-5xl lg:text-7xl text-white tracking-tight leading-none">

@@ -38,7 +38,7 @@ const PROJECTS = [
     subtitle: 'Model Comparison Study',
     tags: ['YOLOv11s', 'RT-DETR', 'Faster R-CNN', 'PyTorch'],
     description:
-      'Comparative study of three state-of-the-art object detection architectures on a balanced 9-class dataset. Analyzed trade-offs between inference speed, localization quality, and classification precision to identify optimal real-time detection strategies.',
+      'Compared YOLOv11s, RT-DETR and Faster R-CNN on a balanced 9-class Pokémon dataset. Each model evaluated on mAP, precision, recall and inference latency — revealing concrete trade-offs between detection speed and localization accuracy for real-time scenarios.',
     metric: '3 Models',
     metricLabel: 'Benchmarked',
     url: 'https://github.com/ricca200xx/Pokemon-Detection-Model-Comparison',
@@ -51,7 +51,7 @@ const PROJECTS = [
     subtitle: 'Image Classification Pipeline',
     tags: ['PyTorch', 'CNN', 'Image Recognition'],
     description:
-      'End-to-end image classification pipeline implementing a convolutional neural network from scratch using PyTorch. Successfully classified images into 20 distinct categories, demonstrating complete deep learning workflows from preprocessing to architecture design.',
+      'Designed and trained a CNN from scratch in PyTorch — no pretrained weights — to classify images across 20 categories. Full pipeline: data augmentation, architecture design, training loop and evaluation. Reached 87% top-1 accuracy through iterative tuning.',
     metric: '87%',
     metricLabel: 'Accuracy — 20 Classes',
     url: 'https://github.com/ricca200xx/Scratch-CNN-Image-Recognition',
@@ -64,7 +64,7 @@ const PROJECTS = [
     subtitle: 'Seq2Seq GRU Architecture',
     tags: ['PyTorch', 'Seq2Seq', 'GRU', 'Scikit-learn'],
     description:
-      'Multivariate time-series forecasting model predicting 76 weather variables 30 steps into the future from 90 historical steps. Employs a Sequence-to-Sequence architecture with Gated Recurrent Units for robust temporal pattern learning.',
+      'Multivariate forecasting model built with a Seq2Seq + GRU architecture. Takes 90 historical timesteps across 76 meteorological variables and predicts 30 steps ahead simultaneously — capturing cross-variable temporal dependencies that single-output models miss.',
     metric: '76',
     metricLabel: 'Variables Predicted',
     url: 'https://github.com/ricca200xx/Weather-Time-Series-Forecasting-with-Seq2Seq-GRU',
@@ -77,7 +77,7 @@ const PROJECTS = [
     subtitle: 'Continuous Optimization Approach',
     tags: ['Python', 'Gradient Descent', 'Frank-Wolfe'],
     description:
-      'Solved the NP-hard Maximum Clique Problem by reformulating it as continuous optimization via the Motzkin-Straus formulation. Benchmarked Projected Gradient Descent and Frank-Wolfe algorithms on DIMACS datasets.',
+      'Tackled the NP-hard Maximum Clique Problem by recasting it as a continuous quadratic program via the Motzkin-Straus theorem. Implemented and benchmarked Projected Gradient Descent vs Frank-Wolfe on standard DIMACS graphs — achieving up to 30% faster convergence.',
     metric: '−30%',
     metricLabel: 'Execution Time on DIMACS',
     url: 'https://github.com/ricca200xx/Find-a-maximal-clique-with-optimization-algorithm',
@@ -286,7 +286,7 @@ export default function Projects() {
           <div className="flex items-center gap-3 mb-1">
             <div className="w-1.5 h-1.5 bg-apple-blue rounded-full" />
             <span className="font-mono text-[9px] tracking-[0.5em] uppercase text-apple-blue">
-              Selected.Works
+              / AI.PROJECTS
             </span>
           </div>
           <span
@@ -304,7 +304,7 @@ export default function Projects() {
           style={{ opacity: 0, transform: 'translateY(30px)', transition: TRANSITION }}
         >
           <span className="font-mono text-[10px] tracking-[0.6em] uppercase text-apple-blue mb-6">
-            Engineering Portfolio
+            / AI.PORTFOLIO
           </span>
           <h2
             className="font-display font-black text-center text-white"
@@ -314,8 +314,8 @@ export default function Projects() {
               letterSpacing: '-0.05em',
             }}
           >
-            <span className="block">SELECTED</span>
-            <span className="block" style={{ color: '#3f3f46' }}>WORKS</span>
+            <span className="block">MY</span>
+            <span className="block" style={{ color: '#3f3f46' }}>PROJECTS</span>
           </h2>
         </div>
 
