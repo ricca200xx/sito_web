@@ -29,7 +29,7 @@ export default function About() {
         style={{ height: '220px', background: 'linear-gradient(to bottom, #080808 0%, transparent 100%)' }} />
       {/* Gradient fade-out in fondo per entrare nella Skills section */}
       <div className="absolute bottom-0 left-0 right-0 pointer-events-none z-0"
-        style={{ height: '160px', background: 'linear-gradient(to top, #080808 0%, transparent 100%)' }} />
+        style={{ height: '320px', background: 'linear-gradient(to top, #080808 0%, #080808 15%, transparent 100%)' }} />
 
       <div className="max-w-[90vw] lg:max-w-7xl mx-auto relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">

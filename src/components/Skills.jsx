@@ -29,12 +29,20 @@ export default function Skills() {
     <section id="skills" className="relative py-40 px-8 bg-transparent">
       {/* Gradient masks per transizioni smooth */}
       <div className="absolute top-0 left-0 right-0 pointer-events-none z-0"
-        style={{ height: '160px', background: 'linear-gradient(to bottom, #080808 0%, transparent 100%)' }} />
+        style={{ height: '320px', background: 'linear-gradient(to bottom, #080808 0%, #080808 15%, transparent 100%)' }} />
       <div className="absolute bottom-0 left-0 right-0 pointer-events-none z-0"
-        style={{ height: '160px', background: 'linear-gradient(to top, #080808 0%, transparent 100%)' }} />
+        style={{ height: '280px', background: 'linear-gradient(to top, #080808 0%, #080808 12%, transparent 100%)' }} />
 
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="flex flex-col lg:flex-row justify-between items-start mb-24 gap-8 border-t border-white/10 pt-12">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          className="absolute top-0 left-0 right-0 h-px bg-white/5 pointer-events-none z-10"
+          style={{ marginTop: '320px' }}
+        />
+        <div className="flex flex-col lg:flex-row justify-between items-start mb-24 gap-8 border-t border-white/[0.06] pt-12">
           <motion.div
             initial={{ opacity: 0, x: -48 }}
             whileInView={{ opacity: 1, x: 0 }}
