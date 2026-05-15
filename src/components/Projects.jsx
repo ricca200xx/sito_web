@@ -1,7 +1,9 @@
 // src/components/Projects.jsx
 import { useRef, useEffect, Suspense } from 'react'
+import { useScroll, useTransform } from 'framer-motion'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Environment, MeshTransmissionMaterial } from '@react-three/drei'
+import { GoogleGeminiEffect } from './ui/GoogleGeminiEffect'
 
 /* ═══════════════════════════════════════════════════════════
    Projects — sticky scroll, visibilità binaria come ScrollHero
@@ -127,6 +129,17 @@ function ProjectShape({ progressRef }) {
 /* ── Componente principale ──────────────────────────────── */
 export default function Projects() {
   const sectionRef     = useRef(null)
+
+  /* framer-motion scroll per Gemini paths */
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  })
+  const p0 = useTransform(scrollYProgress, [0, 0.8], [0.2, 1.2])
+  const p1 = useTransform(scrollYProgress, [0, 0.8], [0.15, 1.2])
+  const p2 = useTransform(scrollYProgress, [0, 0.8], [0.1, 1.2])
+  const p3 = useTransform(scrollYProgress, [0, 0.8], [0.05, 1.2])
+  const p4 = useTransform(scrollYProgress, [0, 0.8], [0, 1.2])
   const progressRef    = useRef(0)
   const headerRef      = useRef(null)
   const exitRef        = useRef(null)
@@ -232,6 +245,14 @@ export default function Projects() {
           style={{ height: '100px', background: 'linear-gradient(to bottom, #080808 0%, transparent 100%)' }} />
         <div className="absolute bottom-0 left-0 right-0 pointer-events-none z-0"
           style={{ height: '100px', background: 'linear-gradient(to top, #080808 0%, transparent 100%)' }} />
+
+        {/* Gemini path lines — background decoration */}
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden" style={{ opacity: 0.35 }}>
+          <GoogleGeminiEffect
+            pathLengths={[p0, p1, p2, p3, p4]}
+            className="absolute inset-0"
+          />
+        </div>
 
         {/* Griglia decorativa */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden z-0" style={{ opacity: 0.04 }}>
