@@ -27,6 +27,8 @@ function mapKeys(p, inputs, outputs) {
   return outputs[outputs.length - 1]
 }
 
+const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+
 /* ── Crystal 3D pilotato da progressRef ─────────────────── */
 function DrivenCrystal({ progressRef }) {
   const meshRef = useRef()
@@ -36,25 +38,39 @@ function DrivenCrystal({ progressRef }) {
     if (!mesh) return
     const p = progressRef.current
 
-    // Minimalist and elegant scaling - TorusKnot but much smaller
     mesh.scale.setScalar(mapKeys(p,
       [0,    0.20, 0.50, 0.80, 1.0],
       [0.05, 0.60, 0.85, 0.95, 0.75]
     ))
-    
-    // Slow, professional rotation
     mesh.rotation.y = p * Math.PI * 1.5
     mesh.rotation.x = p * Math.PI * 1.2
-    
-    // Contained positioning
     mesh.position.y = mapKeys(p, [0, 0.25, 0.60, 1.0], [-0.1, 0.2, 0.1, -0.05])
   })
+
+  if (isMobile) {
+    return (
+      <>
+        <ambientLight intensity={0.4} />
+        <directionalLight position={[5, 5, 5]} intensity={1.4} color="#2997ff" />
+        <directionalLight position={[-5, -3, 2]} intensity={0.6} color="#ffffff" />
+        <mesh ref={meshRef}>
+          <torusKnotGeometry args={[0.8, 0.25, 48, 10]} />
+          <meshStandardMaterial
+            color="#2997ff"
+            metalness={0.6}
+            roughness={0.1}
+            wireframe={false}
+          />
+        </mesh>
+      </>
+    )
+  }
 
   return (
     <>
       <Environment preset="city" />
       <ambientLight intensity={0.25} />
-      <directionalLight position={[5, 5, 5]}    intensity={1.2} color="#ffffff" />
+      <directionalLight position={[5, 5, 5]} intensity={1.2} color="#ffffff" />
       <mesh ref={meshRef}>
         <torusKnotGeometry args={[0.8, 0.25, 128, 32]} />
         <MeshTransmissionMaterial
@@ -182,8 +198,8 @@ export default function ScrollHero() {
           className="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none"
         >
           <div ref={nameInnerRef} className="flex flex-col items-center select-none">
-            <span className="font-mono text-[10px] tracking-[0.6em] uppercase text-apple-blue mb-5">
-              Data Scientist · Gen AI & LLMs · MSc Student
+            <span className="font-mono text-[9px] md:text-[10px] tracking-[0.08em] md:tracking-[0.6em] uppercase text-apple-blue mb-5 text-center px-6 leading-relaxed">
+              Data Scientist · Gen AI &amp; LLMs · MSc Student
             </span>
             <h1
               className="font-display font-black text-center text-white"
@@ -221,7 +237,7 @@ export default function ScrollHero() {
           >
             <span
               className="font-mono uppercase text-apple-blue mb-4"
-              style={{ fontSize: '10px', letterSpacing: '0.55em' }}
+              style={{ fontSize: '10px', letterSpacing: isMobile ? '0.12em' : '0.55em' }}
             >
               {sub}
             </span>
