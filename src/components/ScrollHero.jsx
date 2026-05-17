@@ -85,6 +85,7 @@ export default function ScrollHero() {
   const label3Ref    = useRef(null)
   const indicatorRef = useRef(null)   // "scroll" indicator
   const exitRef      = useRef(null)   // overlay nero exit
+  const progressBarRef    = useRef(null)
 
   useEffect(() => {
     const update = () => {
@@ -126,6 +127,10 @@ export default function ScrollHero() {
         exitRef.current.style.opacity = String(
           Math.max(0, (p - 0.88) / 0.12)
         )
+      }
+
+      if (progressBarRef.current) {
+        progressBarRef.current.style.transform = `scaleX(${p})`
       }
     }
 
@@ -261,14 +266,7 @@ export default function ScrollHero() {
               transform: 'scaleX(0)',
               background: 'linear-gradient(90deg, rgba(41,151,255,0.85), rgba(100,180,255,0.45))',
             }}
-            ref={el => {
-              if (!el) return
-              /* micro-effect: aggiorna la barra live */
-              const update = () => {
-                el.style.transform = `scaleX(${progressRef.current})`
-              }
-              window.addEventListener('scroll', update, { passive: true })
-            }}
+            ref={progressBarRef}
           />
         </div>
 
