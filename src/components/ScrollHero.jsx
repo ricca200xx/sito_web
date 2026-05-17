@@ -27,7 +27,6 @@ function mapKeys(p, inputs, outputs) {
   return outputs[outputs.length - 1]
 }
 
-const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
 
 /* ── Crystal 3D pilotato da progressRef ─────────────────── */
 function DrivenCrystal({ progressRef }) {
@@ -46,25 +45,6 @@ function DrivenCrystal({ progressRef }) {
     mesh.rotation.x = p * Math.PI * 1.2
     mesh.position.y = mapKeys(p, [0, 0.25, 0.60, 1.0], [-0.1, 0.2, 0.1, -0.05])
   })
-
-  if (isMobile) {
-    return (
-      <>
-        <ambientLight intensity={0.4} />
-        <directionalLight position={[5, 5, 5]} intensity={1.4} color="#2997ff" />
-        <directionalLight position={[-5, -3, 2]} intensity={0.6} color="#ffffff" />
-        <mesh ref={meshRef}>
-          <torusKnotGeometry args={[0.8, 0.25, 48, 10]} />
-          <meshStandardMaterial
-            color="#2997ff"
-            metalness={0.6}
-            roughness={0.1}
-            wireframe={false}
-          />
-        </mesh>
-      </>
-    )
-  }
 
   return (
     <>
@@ -180,7 +160,7 @@ export default function ScrollHero() {
             camera={{ position: [0, 0, 5], fov: 45 }}
             gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
             style={{ background: 'transparent' }}
-            dpr={typeof window !== 'undefined' && window.innerWidth < 768 ? 1 : [1, 2]}
+            dpr={[1, 2]}
           >
             <Suspense fallback={null}>
               <DrivenCrystal progressRef={progressRef} />
@@ -237,7 +217,7 @@ export default function ScrollHero() {
           >
             <span
               className="font-mono uppercase text-apple-blue mb-4"
-              style={{ fontSize: '10px', letterSpacing: isMobile ? '0.12em' : '0.55em' }}
+              style={{ fontSize: '10px', letterSpacing: '0.55em' }}
             >
               {sub}
             </span>
