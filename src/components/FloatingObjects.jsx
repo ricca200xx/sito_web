@@ -12,6 +12,9 @@ import * as THREE from 'three'
    • Canvas R3F con alpha:true sovrapposto al VideoBackground
 ═══════════════════════════════════════════════════════════ */
 
+/* ── utility function ── */
+const clamp = (v, a, b) => Math.min(Math.max(v, a), b)
+
 /* ── geometrie disponibili ── */
 const makeGeo = (type, args) => {
   switch (type) {
@@ -160,5 +163,3 @@ export default function FloatingObjects() {
     </div>
   )
 }
-
-const clamp = (v, a, b) => Math.min(Math.max(v, a), b)
