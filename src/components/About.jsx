@@ -19,7 +19,7 @@ const MaskText = ({ children, delay = 0 }) => (
 
 export default function About() {
   return (
-    <section id="about" className="relative py-60 px-8 bg-transparent overflow-hidden">
+    <section id="about" className="relative py-24 lg:py-60 px-8 bg-transparent overflow-hidden">
       {/* Structural Grid */}
       <div className="absolute left-1/4 top-0 bottom-0 w-px bg-white/5 pointer-events-none" />
       <div className="absolute right-1/4 top-0 bottom-0 w-px bg-white/5 pointer-events-none" />
@@ -48,7 +48,7 @@ export default function About() {
           </div>
 
           {/* Main Content */}
-          <div className="lg:col-span-5 lg:pl-12 border-l border-white/10">
+          <div className="lg:col-span-5 lg:pl-12 lg:border-l lg:border-white/10">
             <motion.div
               initial={{ opacity: 0, y: 48 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -85,7 +85,7 @@ export default function About() {
           {/* Metadata / Details */}
           <div className="lg:col-span-3">
             <div className="space-y-12">
-              <div className="h-40 pointer-events-none grayscale opacity-50">
+              <div className="hidden lg:block h-40 pointer-events-none grayscale opacity-50">
                 <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
                   <Suspense fallback={null}>
                     <Crystal scale={1.2} secondary={true} />
