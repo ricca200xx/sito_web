@@ -125,6 +125,7 @@ function Scene({ scrollRef }) {
 
 /* ── export principale ── */
 export default function FloatingObjects() {
+  if (typeof window !== 'undefined' && window.innerWidth < 768) return null
   const scrollRef = useRef(0)
 
   useEffect(() => {
