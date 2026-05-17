@@ -159,7 +159,7 @@ export default function ScrollHero() {
             camera={{ position: [0, 0, 5], fov: 45 }}
             gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
             style={{ background: 'transparent' }}
-            dpr={[1, 2]}
+            dpr={typeof window !== 'undefined' && window.innerWidth < 768 ? 1 : [1, 2]}
           >
             <Suspense fallback={null}>
               <DrivenCrystal progressRef={progressRef} />
