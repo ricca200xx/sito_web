@@ -13,9 +13,6 @@ import { useRef, useEffect } from 'react'
      7. scan pulse line
 ═══════════════════════════════════════════════════════════ */
 
-const NP   = 250          // particles
-const NS   = 200          // stars
-const CR   = 135          // max connection radius
 const B    = [41, 151, 255]
 const BD   = [8,  40,  120]
 
@@ -27,6 +24,11 @@ export default function VideoBackground() {
   const ref = useRef(null)
 
   useEffect(() => {
+    const mobile = window.innerWidth < 768
+    const NP = mobile ? 80  : 250
+    const NS = mobile ? 80  : 200
+    const CR = mobile ? 80  : 135
+
     const canvas = ref.current
     const ctx    = canvas.getContext('2d', { alpha: false })
 
