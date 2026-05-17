@@ -51,12 +51,22 @@ function DrivenCrystal({ progressRef }) {
   if (isMobile) {
     return (
       <>
-        <ambientLight intensity={0.4} />
-        <directionalLight position={[5, 5, 5]} intensity={1.4} color="#2997ff" />
-        <directionalLight position={[-5, -3, 2]} intensity={0.6} color="#ffffff" />
+        <Environment preset="city" />
+        <ambientLight intensity={0.3} />
+        <directionalLight position={[5, 5, 5]} intensity={1.2} color="#ffffff" />
         <mesh ref={meshRef}>
-          <torusKnotGeometry args={[0.8, 0.25, 48, 10]} />
-          <meshStandardMaterial color="#2997ff" metalness={0.6} roughness={0.1} />
+          <torusKnotGeometry args={[0.8, 0.25, 64, 16]} />
+          <MeshTransmissionMaterial
+            transmission={1}
+            roughness={0.12}
+            thickness={0.4}
+            ior={1.4}
+            chromaticAberration={0}
+            color="#ffffff"
+            backside={false}
+            samples={1}
+            envMapIntensity={1.2}
+          />
         </mesh>
       </>
     )
