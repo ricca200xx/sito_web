@@ -25,9 +25,12 @@ export default function VideoBackground() {
 
   useEffect(() => {
     const mobile = window.innerWidth < 768
-    const NP = mobile ? 80  : 250
-    const NS = mobile ? 80  : 200
+    const NP = mobile ? 50  : 250
+    const NS = mobile ? 60  : 200
     const CR = mobile ? 80  : 135
+
+    /* frame-skip per cap 30fps su mobile */
+    let frameCount = 0
 
     const canvas = ref.current
     const ctx    = canvas.getContext('2d', { alpha: false })
@@ -91,6 +94,12 @@ export default function VideoBackground() {
 
     /* ── main loop ── */
     const frame = () => {
+      /* su mobile: salta ogni altro frame → ~30fps */
+      if (mobile) {
+        frameCount++
+        if (frameCount % 2 !== 0) { raf = requestAnimationFrame(frame); return }
+      }
+
       t += 0.007
 
       /* scroll */
@@ -154,40 +163,42 @@ export default function VideoBackground() {
         ctx.fill()
       }
 
-      // orb B — destra→sinistra
-      {
-        const cx = lerp(W * 0.82, W * 0.12, se) - mOffX * 0.70
-        const cy = lerp(H * 0.72, H * 0.24, se * 0.52) - mOffY * 0.70
-        const r  = Math.min(W, H) * lerp(0.50, 0.60, 1 - se)
-        const g  = ctx.createRadialGradient(cx, cy, 0, cx, cy, r)
-        g.addColorStop(0, `rgba(${BD},${lerp(0.16,0.09,se)})`)
-        g.addColorStop(1,  'rgba(0,0,0,0)')
-        ctx.fillStyle = g
-        ctx.beginPath()
-        ctx.ellipse(cx, cy, r, r * 0.78, Math.cos(t * 0.052) * 0.20, 0, Math.PI * 2)
-        ctx.fill()
-      }
+      if (!mobile) {
+        // orb B — destra→sinistra
+        {
+          const cx = lerp(W * 0.82, W * 0.12, se) - mOffX * 0.70
+          const cy = lerp(H * 0.72, H * 0.24, se * 0.52) - mOffY * 0.70
+          const r  = Math.min(W, H) * lerp(0.50, 0.60, 1 - se)
+          const g  = ctx.createRadialGradient(cx, cy, 0, cx, cy, r)
+          g.addColorStop(0, `rgba(${BD},${lerp(0.16,0.09,se)})`)
+          g.addColorStop(1,  'rgba(0,0,0,0)')
+          ctx.fillStyle = g
+          ctx.beginPath()
+          ctx.ellipse(cx, cy, r, r * 0.78, Math.cos(t * 0.052) * 0.20, 0, Math.PI * 2)
+          ctx.fill()
+        }
 
-      // orb C — bloom centrale a metà scroll
-      {
-        const bloom = Math.max(0, Math.sin(scroll * Math.PI))
-        const cx = W * 0.5 + Math.sin(t * 0.10) * W * 0.04
-        const cy = H * 0.47 + Math.cos(t * 0.08) * H * 0.04
-        const r  = Math.min(W, H) * 0.46
-        const g  = ctx.createRadialGradient(cx, cy, 0, cx, cy, r)
-        g.addColorStop(0,   `rgba(88,165,255,${0.11 * bloom})`)
-        g.addColorStop(0.5, `rgba(${B},${0.06 * bloom})`)
-        g.addColorStop(1,    'rgba(0,0,0,0)')
-        ctx.fillStyle = g
-        ctx.beginPath()
-        ctx.arc(cx, cy, r, 0, Math.PI * 2)
-        ctx.fill()
+        // orb C — bloom centrale a metà scroll
+        {
+          const bloom = Math.max(0, Math.sin(scroll * Math.PI))
+          const cx = W * 0.5 + Math.sin(t * 0.10) * W * 0.04
+          const cy = H * 0.47 + Math.cos(t * 0.08) * H * 0.04
+          const r  = Math.min(W, H) * 0.46
+          const g  = ctx.createRadialGradient(cx, cy, 0, cx, cy, r)
+          g.addColorStop(0,   `rgba(88,165,255,${0.11 * bloom})`)
+          g.addColorStop(0.5, `rgba(${B},${0.06 * bloom})`)
+          g.addColorStop(1,    'rgba(0,0,0,0)')
+          ctx.fillStyle = g
+          ctx.beginPath()
+          ctx.arc(cx, cy, r, 0, Math.PI * 2)
+          ctx.fill()
+        }
       }
 
       ctx.restore()
 
-      /* ─ 3b. cursor glow ────────────────────── */
-      {
+      /* ─ 3b. cursor glow (solo desktop) ────── */
+      if (!mobile) {
         ctx.save()
         ctx.globalCompositeOperation = 'screen'
         const cg = ctx.createRadialGradient(mx, my, 0, mx, my, 200)
@@ -225,43 +236,47 @@ export default function VideoBackground() {
         ctx.restore()
       }
 
-      /* ─ 5. energy rings ───────────────────── */
-      ctx.save()
-      ctx.lineWidth = 1
-      for (let i = rings.length - 1; i >= 0; i--) {
-        const rg = rings[i]
-        rg.r     += rg.spd
-        rg.alpha *= 0.955
-        if (rg.alpha < 0.008 || rg.r > rg.maxR) { rings.splice(i, 1); continue }
-        ctx.strokeStyle = `rgba(${B},${rg.alpha})`
-        ctx.beginPath()
-        ctx.arc(rg.x, rg.y, rg.r, 0, Math.PI * 2)
-        ctx.stroke()
+      /* ─ 5. energy rings (solo desktop) ──────── */
+      if (!mobile) {
+        ctx.save()
+        ctx.lineWidth = 1
+        for (let i = rings.length - 1; i >= 0; i--) {
+          const rg = rings[i]
+          rg.r     += rg.spd
+          rg.alpha *= 0.955
+          if (rg.alpha < 0.008 || rg.r > rg.maxR) { rings.splice(i, 1); continue }
+          ctx.strokeStyle = `rgba(${B},${rg.alpha})`
+          ctx.beginPath()
+          ctx.arc(rg.x, rg.y, rg.r, 0, Math.PI * 2)
+          ctx.stroke()
+        }
+        ctx.restore()
       }
-      ctx.restore()
 
-      /* ─ 6a. connessioni particelle ─────────── */
-      const connR = lerp(CR * 0.68, CR * 1.35, scroll)
-      ctx.save()
-      ctx.lineWidth = 0.4
-      for (let i = 0; i < pts.length; i++) {
-        const a = pts[i]
-        for (let j = i + 1; j < pts.length; j++) {
-          const b  = pts[j]
-          const dx = a.x - b.x
-          const dy = a.y - b.y
-          if (Math.abs(dx) > connR || Math.abs(dy) > connR) continue
-          const d = Math.hypot(dx, dy)
-          if (d < connR) {
-            ctx.strokeStyle = `rgba(${B},${(1 - d / connR) * lerp(0.04,0.14,scroll)})`
-            ctx.beginPath()
-            ctx.moveTo(a.x, a.y)
-            ctx.lineTo(b.x, b.y)
-            ctx.stroke()
+      /* ─ 6a. connessioni particelle (solo desktop) ── */
+      if (!mobile) {
+        const connR = lerp(CR * 0.68, CR * 1.35, scroll)
+        ctx.save()
+        ctx.lineWidth = 0.4
+        for (let i = 0; i < pts.length; i++) {
+          const a = pts[i]
+          for (let j = i + 1; j < pts.length; j++) {
+            const b  = pts[j]
+            const dx = a.x - b.x
+            const dy = a.y - b.y
+            if (Math.abs(dx) > connR || Math.abs(dy) > connR) continue
+            const d = Math.hypot(dx, dy)
+            if (d < connR) {
+              ctx.strokeStyle = `rgba(${B},${(1 - d / connR) * lerp(0.04,0.14,scroll)})`
+              ctx.beginPath()
+              ctx.moveTo(a.x, a.y)
+              ctx.lineTo(b.x, b.y)
+              ctx.stroke()
+            }
           }
         }
+        ctx.restore()
       }
-      ctx.restore()
 
       /* ─ 6b. punti particella ───────────────── */
       const REPULSE_R = 110
